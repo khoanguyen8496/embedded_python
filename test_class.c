@@ -11,13 +11,14 @@ void debug_pystring_list(PyObject *obj)
 	int i;
 	for (i = 0; i < n; ++i) {
 		PyObject *item = PyList_GetItem(obj, i);
+		Py_INCREF(item);
 		if (PyString_Check(item)) {
 			char *sps = PyString_AsString(item);
 			fprintf(stderr, "debug item %d %s\n", i, sps);
 		} else {
 			fprintf(stderr, "Item is not string\n");
 		}
-		Py_DECRE(item);
+		Py_DECREF(item);
 	}
 }
 
@@ -33,7 +34,7 @@ void append_syspath(const char *path)
 		PyObject *pypath = PyString_FromString(path);
 		assert(pypath);
 		PyList_Append(syspath, pypath);
-		// debug_pystring_list(syspath);
+		debug_pystring_list(syspath);
 		Py_DECREF(syspath);
 	} else {
 		fprintf(stderr, "Cannot get syspath\n");
@@ -77,28 +78,28 @@ int main(int argc, char *argv[])
 
 	append_syspath(".");
 
-	PyObject *pip_obj = import_module("mock");
-	assert(pip_obj);
+// 	PyObject *pip_obj = import_module("mock");
+// 	assert(pip_obj);
 	PyObject *os_obj = import_module("os");
 	assert(os_obj);
 	PyObject *curdir = get_submodule(os_obj, "curdir");
 	assert(curdir);
 
-	// assume that curdir is a string
-	// check string
+	// // assume that curdir is a string
+	// // check string
 	if (PyString_Check(curdir)) {
 		char *str = PyString_AsString(curdir);
 		fprintf(stderr, "debug string %s\n", str);
 	}
 
-	// prepare to finalize
-	// decrease all references
+	// // prepare to finalize
+	// // decrease all references
 	if (os_obj)
 		Py_DECREF(os_obj);
 	if (curdir)
 		Py_DECREF(curdir);
-	if (pip_obj)
-		Py_DECREF(pip_obj);
+	// if (pip_obj)
+	// 	Py_DECREF(pip_obj);
 
 	// decrease all object ref to feed the garbage collector
 	Py_Finalize();
