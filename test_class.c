@@ -78,12 +78,12 @@ int main(int argc, char *argv[])
 
 	append_syspath(".");
 
-// 	PyObject *pip_obj = import_module("mock");
-// 	assert(pip_obj);
 	PyObject *os_obj = import_module("os");
 	assert(os_obj);
 	PyObject *curdir = get_submodule(os_obj, "curdir");
 	assert(curdir);
+	PyObject *pip_obj = import_module("numpy");
+	assert(pip_obj);
 
 	// // assume that curdir is a string
 	// // check string
@@ -92,14 +92,14 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "debug string %s\n", str);
 	}
 
-	// // prepare to finalize
-	// // decrease all references
+	// prepare to finalize
+	// decrease all references
 	if (os_obj)
 		Py_DECREF(os_obj);
 	if (curdir)
 		Py_DECREF(curdir);
-	// if (pip_obj)
-	// 	Py_DECREF(pip_obj);
+	if (pip_obj)
+		Py_DECREF(pip_obj);
 
 	// decrease all object ref to feed the garbage collector
 	Py_Finalize();
