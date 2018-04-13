@@ -4,6 +4,16 @@
 #include <string.h>
 #include <assert.h>
 
+struct array_string {
+	char **data;
+	size_t *nd;
+	size_t n;
+};
+
+void push_item_array_string(const char *item, const size_t ni) {
+	
+}
+
 void debug_pystring_list(PyObject *obj)
 {
 	fprintf(stderr, "debug pylist of strings\n");
@@ -55,6 +65,7 @@ PyObject *import_module(const char *module_name)
 }
 
 // get submodule part from the object
+// used for getting class out of module
 PyObject *get_submodule(PyObject *obj, const char *sub)
 {
 	PyObject *submod = NULL;
@@ -65,6 +76,36 @@ PyObject *get_submodule(PyObject *obj, const char *sub)
 		return NULL;
 	}
 	return submod;
+}
+
+char **split_nested_submodule(const char *sub, const int ns) {
+	int i;
+	char *buffer = calloc(ns, sizeof(char));
+	// for (i = 0; i < ns; ++i) {
+	// }
+	PyObject *result;
+	return result;
+}
+
+PyObject *get_nested_submodule(PyObject *obj, const char *sub)
+{
+	PyObject *result;
+	return result;
+}
+
+// call object to run and return value
+// args must be a python tuple
+PyObject *call_object(PyObject *obj, PyObject *args)
+{
+	PyObject *result = NULL;
+	if (obj) {
+		result = PyEval_CallObject(obj, args);
+		if (!result) {
+			fprintf(stderr, "Error calling object\n");
+			return NULL;
+		}
+	}
+	return result;
 }
 
 int main(int argc, char *argv[])
@@ -82,8 +123,8 @@ int main(int argc, char *argv[])
 	assert(os_obj);
 	PyObject *curdir = get_submodule(os_obj, "curdir");
 	assert(curdir);
-	PyObject *pip_obj = import_module("numpy");
-	assert(pip_obj);
+	// PyObject *pip_obj = import_module("numpy");
+	// assert(pip_obj);
 
 	// // assume that curdir is a string
 	// // check string
@@ -92,14 +133,15 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "debug string %s\n", str);
 	}
 
+
 	// prepare to finalize
 	// decrease all references
 	if (os_obj)
 		Py_DECREF(os_obj);
 	if (curdir)
 		Py_DECREF(curdir);
-	if (pip_obj)
-		Py_DECREF(pip_obj);
+	// if (pip_obj)
+	// 	Py_DECREF(pip_obj);
 
 	// decrease all object ref to feed the garbage collector
 	Py_Finalize();
