@@ -55,18 +55,12 @@ void append_syspath(const char *path)
 PyObject *import_module(const char *module_name)
 {
 	PyObject *pmn = Py_BuildValue("s", module_name);
-	if (!pmn) {
-		PyErr_Print();
-		fprintf(stderr, "Error building value\n");
+	if (!check_object_pointer(pmn, "Error building value\n"))
 		return NULL;
-	}
 	PyObject *lmod = NULL;
 	lmod = PyImport_Import(pmn);
-	if (!lmod) {
-		PyErr_Print();
-		fprintf(stderr, "Error loading module %s\n", module_name);
+	if (!check_object_pointer(lmod, "Error importing module\n"))
 		return NULL;
-	}
 	return lmod;
 }
 

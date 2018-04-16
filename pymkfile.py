@@ -1,5 +1,5 @@
 #!/usr/bin/python2
-import distutils.sysconfig
+import sysconfig
 import string, sys
 import glob
 import re
@@ -14,29 +14,27 @@ DEPS=%(deps)s
 PROGRAMS=%(programs)s
 all: $(PROGRAMS) $(DEPS)
 """
-configopts['pythonlib'] = distutils.sysconfig.get_config_var('LIBPL') \
-        + '/' + \
-        distutils.sysconfig.get_config_var('LIBRARY')
+configopts['pythonlib'] = '-L' + sysconfig.get_config_var('LIBPL') \
+        + ' ' + \
+        '-lpython' + str(sysconfig.get_config_var('py_version_short'))
 configopts['pythoninc'] = ''
-configopts['pylibs'] = distutils.sysconfig.get_config_var('LINKFORSHARED') + ' '
+configopts['pylibs'] = sysconfig.get_config_var('LINKFORSHARED') + ' '
 # configopts['pylibs'] = ''
-for dir in string.split(distutils.sysconfig.get_config_var('INCLDIRSTOMAKE')):
+for dir in string.split(sysconfig.get_config_var('INCLDIRSTOMAKE')):
     configopts['pythoninc'] += '-I%s ' % (dir,)
-for dir in string.split(distutils.sysconfig.get_config_var('LIBDIR')):
+for dir in string.split(sysconfig.get_config_var('LIBDIR')):
     configopts['pylibs'] += '-L%s ' % (dir,)
-configopts['pylibs'] += distutils.sysconfig.get_config_var('MODLIBS') \
+configopts['pylibs'] += sysconfig.get_config_var('MODLIBS') \
         + ' ' + \
-        distutils.sysconfig.get_config_var('LIBS') \
+        sysconfig.get_config_var('LIBS') \
         + ' ' + \
-        distutils.sysconfig.get_config_var('SYSLIBS')
-configopts['pyopt'] = distutils.sysconfig.get_config_var('OPT')
+        sysconfig.get_config_var('SYSLIBS')
+configopts['pyopt'] = sysconfig.get_config_var('OPT')
 source_obj = []
 for source_file in glob.iglob("*.c"):
     source_obj.append(re.sub(r'(.+?)\.c', r'\1.o', source_file))
 configopts['deps'] = ' '.join(source_obj)
 targets = ''
-
-
 arg = sys.argv[1]
 targets += arg + ' '
 configopts['programs'] = targets
