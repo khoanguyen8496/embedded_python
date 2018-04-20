@@ -6,6 +6,14 @@
 #include <string.h>
 #include <assert.h>
 
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
+#include <set>
+#include <algorithm>
+#include <memory>
+
 #define CH_DECREF(ref) \
 {\
 	if (ref) \
@@ -29,4 +37,15 @@ PyObject *get_submodule(PyObject *obj, const char *sub);
 // call object to run and return value
 // args mut be a python tuple
 PyObject *call_object(PyObject *obj, PyObject *args);
+
+// util to parse dict from python
+// return 1 if the object is a dict
+int check_dict(PyObject *obj);
+// return 1 if the object is a string
+int check_string(PyObject *obj);
+// return 1 if the object is a dict of strings
+int check_string_dict(PyObject *obj);
+// return 1 if the object is a dict of strings
+int check_gene_expression_result(PyObject *obj);
+// return 1 if the retrieve process is sucessfully done
 #endif // EMBEDDED_PYTHON_HELPER
