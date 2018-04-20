@@ -5,10 +5,19 @@ void test_my_module() {
   int f = 0;
   f = PyObject_HasAttrString(my_obj, "test");
   fprintf(stderr, "%d has attr string test\n", f);
-  // assert(f == 6);
 
   PyObject *test = get_submodule(my_obj, "test");
   PyObject *res = call_object(test, NULL);
+
+  try {
+    Json::Value value = get_gene_expression_json(res);
+  } catch (std::exception &ex) {
+    std::string ex_string = ex.what();
+    fprintf(stderr, "Caught exception %s\n", ex_string.c_str());
+  } catch (...) {
+    fprintf(stderr, "Undefined Exception\n");
+  }
+
   assert(res);
   CH_DECREF(test);
   CH_DECREF(res);
