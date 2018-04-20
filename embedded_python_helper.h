@@ -1,26 +1,25 @@
 #ifndef EMBEDDED_PYTHON_HELPER
 
 #include <Python.h>
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
 
+#include <algorithm>
 #include <iostream>
+#include <map>
+#include <memory>
+#include <set>
 #include <string>
 #include <vector>
-#include <map>
-#include <set>
-#include <algorithm>
-#include <memory>
 
-#define CH_DECREF(ref) \
-{\
-	if (ref) \
-		Py_DECREF(ref);\
-}
+#define CH_DECREF(ref)       \
+  {                          \
+    if (ref) Py_DECREF(ref); \
+  }
 
-int check_object_pointer(PyObject *obj, const char *msg);
+bool check_object_pointer(PyObject *obj, const char *msg);
 
 void debug_pystring_list(PyObject *obj);
 
@@ -40,12 +39,12 @@ PyObject *call_object(PyObject *obj, PyObject *args);
 
 // util to parse dict from python
 // return 1 if the object is a dict
-int check_dict(PyObject *obj);
+bool check_dict(PyObject *obj);
 // return 1 if the object is a string
-int check_string(PyObject *obj);
+bool check_string(PyObject *obj);
 // return 1 if the object is a dict of strings
-int check_string_dict(PyObject *obj);
+bool check_string_dict(PyObject *obj);
 // return 1 if the object is a dict of strings
-int check_gene_expression_result(PyObject *obj);
+bool check_gene_expression_result(PyObject *obj);
 // return 1 if the retrieve process is sucessfully done
-#endif // EMBEDDED_PYTHON_HELPER
+#endif  // EMBEDDED_PYTHON_HELPER
