@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include <algorithm>
 #include <iostream>
@@ -13,11 +14,15 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <sstream>
+#include <exception>
 
-#define CH_DECREF(ref)       \
-  {                          \
-    if (ref) Py_DECREF(ref); \
-  }
+#include "json.h"
+
+#define CH_DECREF(ref)     \
+{                          \
+  if (ref) Py_DECREF(ref); \
+}
 
 bool check_object_pointer(PyObject *obj, const char *msg);
 
@@ -46,5 +51,6 @@ bool check_string(PyObject *obj);
 bool check_string_dict(PyObject *obj);
 // return 1 if the object is a dict of strings
 bool check_gene_expression_result(PyObject *obj);
-// return 1 if the retrieve process is sucessfully done
+// return json value
+Json::Value get_gene_expression_json(PyObject *obj);
 #endif  // EMBEDDED_PYTHON_HELPER

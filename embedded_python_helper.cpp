@@ -79,7 +79,8 @@ bool check_dict(PyObject *obj) { return 1; }
 
 // check object is a string
 bool check_string(PyObject *obj) {
-  if (!check_object_pointer(obj, "check string object is null\n")) return 0;
+  if (!check_object_pointer(obj, "check string object is null\n"))
+    return 0;
   if (!PyObject_TypeCheck(obj, &PyBaseString_Type)) {
     PyErr_SetString(PyExc_ValueError, "object must be a string.");
     return 0;
@@ -92,3 +93,16 @@ bool check_string_dict(PyObject *obj) { return 1; }
 
 // check whether gene expression result is valid
 bool check_gene_expression_result(PyObject *obj) { return 1; }
+
+// check if the obj is a string and parse it to json value
+Json::Value get_gene_expression_json(PyObject *obj) {
+  if (!check_string(obj))
+    throw std::logic_error("Object is not a string");
+  Json::Value value;
+  std::stringstream ss;
+  Json::CharReaderBuilder builder;
+  builder["collectComments"] = false;
+  JSONCPP_STRING errs;
+  bool ok = Json::parseFromStream(builder, ss, &value, &errs);
+  return value;
+}
