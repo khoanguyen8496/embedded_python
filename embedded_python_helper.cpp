@@ -94,6 +94,19 @@ bool check_string_dict(PyObject *obj) { return 1; }
 // check whether gene expression result is valid
 bool check_gene_expression_result(PyObject *obj) { return 1; }
 
+std::string get_string(PyObject *obj) {
+  std::string res;
+  char *s;
+  if (!check_string(obj)) {
+    std::cerr << "is not string\n";
+    return res;
+  }
+  // obj is  a string so just parse it
+  s = PyString_AsString(obj);
+  res = s;
+  return res;
+}
+
 // check if the obj is a string and parse it to json value
 Json::Value get_gene_expression_json(PyObject *obj) {
   if (!check_string(obj))
@@ -103,6 +116,7 @@ Json::Value get_gene_expression_json(PyObject *obj) {
   Json::CharReaderBuilder builder;
   builder["collectComments"] = false;
   JSONCPP_STRING errs;
+  ss << get_string(obj);
   bool ok = Json::parseFromStream(builder, ss, &value, &errs);
   return value;
 }
